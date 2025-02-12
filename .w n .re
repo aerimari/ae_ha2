@@ -1,0 +1,67 @@
+import os
+
+created_files = []
+
+while True:
+    print("\nChoose an action:")
+    print("1. Create a file and write text")
+    print("2. Read the contents of a file")
+    print("3. Show all created files")
+    print("4. Delete a file")
+    print("5. Exit")
+
+    choice = input("Enter your choice (1-5): ")
+
+    if choice == "1":
+        filename = input("Enter the name of the file to create: ")
+        content = input("What do you want to write in the file? ")
+
+        with open(filename, "w") as file:
+            file.write(content)
+
+        created_files.append(filename)
+        print(f"File '{filename}' has been created!")
+
+    elif choice == "2":
+        filename = input("Enter the name of the file to read: ")
+
+        try:
+            with open(filename, "r") as file:
+                print("\nFile Contents:")
+                print(file.read())
+        except FileNotFoundError:
+            print("The file does not exist. Please create it first.")
+
+    elif choice == "3":
+        if created_files:
+            print("\nAll created files:")
+            for file in created_files:
+                print(f"- {file}")
+        else:
+            print("No files have been created yet.")
+
+    elif choice == "4":
+        if created_files:
+            print("\nChoose a file to delete:")
+            for index, file in enumerate(created_files, start=1):
+                print(f"{index}. {file}")
+
+            try:
+                file_index = int(input("Enter the number of the file to delete: ")) - 1
+                if 0 <= file_index < len(created_files):
+                    filename = created_files.pop(file_index)
+                    os.remove(filename)
+                    print(f"File '{filename}' has been deleted!")
+                else:
+                    print("Invalid file number. Please try again.")
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+        else:
+            print("No files have been created yet.")
+
+    elif choice == "5":
+        print("Goodbye!")
+        break
+
+    else:
+        print("Invalid choice. Please choose 1, 2, 3, 4, or 5.")
