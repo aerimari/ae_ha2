@@ -1,0 +1,77 @@
+import os
+
+contact_files = []
+
+while True:
+    print("\nChoose an action.")
+    print("1. Add")
+    print("2. Display")
+    print("3. Search")
+    print("4. Delete")
+    print("5. Edit")
+    print("6. Clear All Contacts")
+    print("7. Exit")
+    
+    choice = input("Enter your choice (1-7): ")
+
+    if choice == '1':
+        if len(contact_files) < 3:
+            name = input("Enter contact name: ").title()
+            with open(name, 'w') as f:
+                f.write(input("Number: "))
+            contact_files.append(name)
+            print(f"'{name}' has been created!")
+        else:
+            print("Limit reached!")
+
+    elif choice == '2':
+        if contact_files:
+            print("Contacts:")
+            for contact in contact_files:
+                with open(contact) as f:
+                    print(f"- {contact}: {f.read().strip()}")
+        else:
+            print("No contacts created.")
+
+    elif choice == '3':
+        name = input("Enter contact name to search: ").title()
+        try:
+            with open(name) as f:
+                print(f"Contact's Number: {f.read()}")
+        except FileNotFoundError:
+            print("Contact does not exist.")
+
+    elif choice == '4':
+        name = input("Enter contact name to delete: ").title()
+        if name in contact_files:
+            os.remove(name)
+            contact_files.remove(name)
+            print(f"'{name}' has been deleted!")
+        else:
+            print("Contact does not exist.")
+
+    elif choice == '5':
+        name = input("Enter contact name to edit: ").title()
+        if name in contact_files:
+            new_number = input("Enter new number: ")
+            with open(name, 'w') as f:
+                f.write(new_number)
+            print(f"'{name}' has been updated!")
+        else:
+            print("Contact does not exist.")
+
+    elif choice == '6':
+        if contact_files:
+            for contact in contact_files:
+                os.remove(contact)  # Delete each contact file
+            contact_files.clear()  # Clear the list of contact names
+            print("All contacts have been cleared!")
+        else:
+            print("No contacts to clear.")
+
+    elif choice == '7':
+        print("Goodbye!")
+        break
+
+    else:
+        print("Invalid input! Choose 1-7.")
