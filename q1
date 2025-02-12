@@ -1,0 +1,88 @@
+import os
+
+if not os.path.exists("contacts.txt"):
+    with open("contacts.txt", "w") as file:
+        file.write("Name,Phone Number\n")
+
+def count_contacts():
+    with open("contacts.txt", "r") as file:
+        return len(file.readlines()) - 1 
+
+def show_contacts():
+    with open("contacts.txt", "r") as file:
+        contacts = file.readlines()
+        if len(contacts) <= 1:
+            print("No contacts available.")
+            return
+        print("\nAll Contacts:")
+        for contact in contacts[1:]:
+            print(contact.strip())
+
+def add_contact(name, phone):
+    if count_contacts() >= 10:
+        print("Contact list is full. Cannot add more contacts.")
+        return
+
+    with open("contacts.txt", "a") as file:
+        file.write(f"{name},{phone}\n")
+    print(f"{name} has been added to your contacts.")
+
+def search_contact(name):
+    with open("contacts.txt", "r") as file:
+        contacts = file.readlines()
+        found = False
+        for contact in contacts[1:]:
+            if name.lower() in contact.lower():
+                print(f"Contact found: {contact.strip()}")
+                found = True
+        if not found:
+            print("Contact not found.")
+
+def delete_contact(name):
+    with open("contacts.txt", "r") as file:
+        contacts = file.readlines()
+
+    updated_contacts = [contacts[0]] 
+    found = False
+
+    for contact in contacts[1:]:
+        if name.lower() not in contact.lower():
+            updated_contacts.append(contact)
+        else:
+            found = True
+
+    if found:
+        with open("contacts.txt", "w") as file:
+            file.writelines(updated_contacts)
+        print(f"Contact '{name}' deleted successfully.")
+    else:
+        print("Contact not found.")
+
+while True:
+    action = input("\nWhat would you like to do? (Add, Show, Search, Delete, Exit): ").lower()
+
+    if action == "add":
+        name = input("Enter the contact name to add: ").strip()
+        phone = input("Enter the phone number: ").strip()
+        if name and phone:
+            add_contact(name, phone)
+        else:
+            print("Invalid input. Name and phone number cannot be empty.")
+
+    elif action == "show":
+        show_contacts()
+
+    elif action == "search":
+        search_name = input("Enter the name of the contact to search for: ").strip()
+        search_contact(search_name)
+
+    elif action == "delete":
+        delete_name = input("Enter the name of the contact to delete: ").strip()
+        delete_contact(delete_name)
+
+    elif action == "exit":
+        print("Goodbye!")
+        break
+
+    else:
+        print("Invalid choice. Please enter 'Add', 'Show', 'Search', 'Delete', or 'Exit'.")
