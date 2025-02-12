@@ -1,0 +1,31 @@
+import os
+
+file_path = "contacts.txt"
+if not os.path.exists(file_path):
+    open(file_path, "w").write("Name,Phone Number\n")
+
+def show_contacts():
+    print("\nAll Contacts:")
+    print("".join(open(file_path).readlines()[1:]).strip() or "No contacts available.")
+
+def add_contact(name, phone):
+    open(file_path, "a").write(f"{name},{phone}\n")
+    print(f"{name} has been added.")
+
+def search_contact(name):
+    contacts = open(file_path).read().splitlines()[1:]
+    matches = [c for c in contacts if name.lower() in c.lower()]
+    print("\n".join(matches) if matches else "Contact not found.")
+
+while True:
+    action = input("\nWhat would you like to do? (Add, Show, Search, Exit): ").lower()
+    if action == "add":
+        add_contact(input("Enter the contact name: "), input("Enter the phone number: "))
+    elif action == "show":
+        show_contacts()
+    elif action == "search":
+        search_contact(input("Enter the contact name: "))
+    elif action == "exit":
+        print("Goodbye!"); break
+    else:
+        print("Invalid choice. Try again.")
